@@ -1,0 +1,13 @@
+CompilerType=g++
+CFLAGS=-c -std=c++17 -Wall
+
+all: test
+test: main.o Allocator.o
+	$(CompilerType)  main.o Allocator.o -o a.out
+Allocator.o: Allocator.cpp Allocator.h
+	$(CompilerType)  $(CFLAGS) allocator.cpp -o Allocator.o
+main.o: main.cpp Allocator.h
+	$(CompilerType) $(CFLAGS) main.cpp  -o main.o
+clean:
+	rm -rf *.o test
+
