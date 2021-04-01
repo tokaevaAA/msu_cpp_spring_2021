@@ -14,7 +14,7 @@ void Allocator::makeAllocator(size_t a_maxSize){
     
   else if (m_maxSize > 0 && a_maxSize == 0) {
     if (m_mas != nullptr) {
-      free(m_mas);
+      delete[] m_mas;
     }
     m_maxSize = 0;
     m_mas = nullptr;
@@ -40,7 +40,7 @@ char* Allocator::alloc(size_t a_size) {
     return nullptr;
   }
   m_filled += a_size;
-  return m_mas + m_filled;
+  return m_mas + m_filled - a_size;
 }
 
 void Allocator::reset() {m_filled = 0;}
