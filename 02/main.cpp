@@ -21,47 +21,79 @@ void my_func_for_strings(const char *tek_word){
     printf("We have string: %s\n", tek_word);
 }
 
-void Test1(){
-    printf("Test1: no handlers, but right parsing;\n");
+void Test1_EmptyString(){
+    std::vector<std::string> otv;
     Parser my_instance_of_parser;
-    my_instance_of_parser.parse("abc 123a 123 a123");
-    int cnt1=my_instance_of_parser.get_cnt_ints();
-    int cnt2=my_instance_of_parser.get_cnt_strings();
-    assert(cnt1==1);
-    assert(cnt2==3);
+    otv=my_instance_of_parser.parse("");
+    assert(otv.size()==0);
 }
 
-void Test2(){
-    printf("Test2: we have handler for end work;\n");
+void Test2_TooBigInt(){
+    std::vector<std::string> otv;
     Parser my_instance_of_parser;
-    my_instance_of_parser.register_my_handler_for_end_work(my_func_for_end);
-    my_instance_of_parser.parse("abc 123a 123 a123");
-    int cnt1=my_instance_of_parser.get_cnt_ints();
-    int cnt2=my_instance_of_parser.get_cnt_strings();
-    assert(cnt1==1);
-    assert(cnt2==3);
+    otv=my_instance_of_parser.parse("18446744073709551619");
+    assert(otv.size()==1);
+    assert(otv[0]=="too_big_int");
 }
 
-void Test3(){
-    printf("Test3: we have all handlers;\n");
+void Test3_SeveralInts(){
+    std::vector<std::string> otv;
     Parser my_instance_of_parser;
-    my_instance_of_parser.register_my_handler_for_begin_work(my_func_for_begin);
-    my_instance_of_parser.register_my_handler_for_end_work(my_func_for_end);
-    my_instance_of_parser.register_my_handler_for_ints(my_func_for_ints);
-    my_instance_of_parser.register_my_handler_for_strings(my_func_for_strings);
-    my_instance_of_parser.parse("abc 123a 123 a123");
-    int cnt1=my_instance_of_parser.get_cnt_ints();
-    int cnt2=my_instance_of_parser.get_cnt_strings();
-    assert(cnt1==1);
-    assert(cnt2==3);
+    otv=my_instance_of_parser.parse("18 446 744 ");
+    assert(otv.size()==3);
+    assert(otv[0]=="int");
+    assert(otv[1]=="int");
+    assert(otv[2]=="int");
 }
+
+void Test4_SpacesOnly(){
+    std::vector<std::string> otv;
+    Parser my_instance_of_parser;
+    otv=my_instance_of_parser.parse("      ");
+    assert(otv.size()==0);
+}
+
+void Test5_1(){
+    std::vector<std::string> otv;
+    Parser my_instance_of_parser;
+    otv=my_instance_of_parser.parse("1");
+    assert(otv.size()==1);
+    assert(otv[0]=="int");
+}
+
+
+void Test6_a(){
+    std::vector<std::string> otv;
+    Parser my_instance_of_parser;
+    otv=my_instance_of_parser.parse("a");
+    assert(otv.size()==1);
+    assert(otv[0]=="string");
+}
+
+void Test7_AtEnds(){
+    std::vector<std::string> otv;
+    Parser my_instance_of_parser;
+    otv=my_instance_of_parser.parse("  a a12  123 12a  ");
+    assert(otv.size()==4);
+    assert(otv[0]=="string");
+    assert(otv[1]=="string");
+    assert(otv[2]=="int");
+    assert(otv[3]=="string");
+}
+
 
 int main(void){
     printf("Hello!\n");
     
-    Test1();
-    Test2();
-    Test3();
+    Test1_EmptyString();
+    Test2_TooBigInt();
+    Test3_SeveralInts();
+    Test4_SpacesOnly();
+    Test5_1();
+    Test6_a();
+    Test7_AtEnds();
+    
+    
     
     printf("Goodbye!\n");
     return 0;
