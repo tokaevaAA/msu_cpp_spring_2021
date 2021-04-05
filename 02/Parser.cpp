@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <tuple>
 #include "Parser.h"
 
 
@@ -26,11 +27,12 @@ void Parser::register_my_handler_for_strings(Handler_for_strings my_func){
 
 
 
-std::vector<std::string> Parser::parse(const std::string& text){
+std::tuple<std::vector<std::string>,std::vector<std::string>>
+Parser::parse(const std::string& text){
     printf("parsing this:%s\n",text.c_str());
     if (my_handler_for_begin_work != nullptr ) {my_handler_for_begin_work(); }
 
-    std::vector<std::string> otv;
+    std::tuple<std::vector<std::string>,std::vector<std::string>> otv;
     if (text.length() == 0){
         if (my_handler_for_end_work != nullptr ) {my_handler_for_end_work();
             return otv;
@@ -66,16 +68,21 @@ std::vector<std::string> Parser::parse(const std::string& text){
             try{
             uint64_t num = std::stoull(tek_token.c_str());
             if (my_handler_for_ints != nullptr) {my_handler_for_ints(num);}
-            otv.push_back("int");
+            (std::get<0>(otv)).push_back("int");
+            (std::get<1>(otv)).push_back(tek_token);
             }
             catch(...){
                 if (my_handler_for_strings != nullptr){my_handler_for_strings(tek_token.c_str());}
-                otv.push_back("too_big_int");
+                (std::get<0>(otv)).push_back("too_big_int");
+                (std::get<1>(otv)).push_back(tek_token);
             }
         }
         if (tek_token.length() > 0 && looks_like_number==0){
-            if (my_handler_for_strings != nullptr){my_handler_for_strings(tek_token.c_str());}
-            otv.push_back("string");
+            if (my_handler_for_strings != nullptr){
+                my_handler_for_strings(tek_token.c_str());
+            }
+            (std::get<0>(otv)).push_back("string");
+            (std::get<1>(otv)).push_back(tek_token);
         }
         pos_to_start_from = text.find_first_not_of(" \n\t",pos_where_found);
         pos_where_found = text.find_first_of(" \n\t",pos_to_start_from);
@@ -98,17 +105,22 @@ std::vector<std::string> Parser::parse(const std::string& text){
         if (tek_token.length() > 0 && looks_like_number==1){
             try{
             uint64_t num = std::stoull(tek_token.c_str());
-            if (my_handler_for_ints != nullptr) {my_handler_for_ints(num);}
-            otv.push_back("int");
+            if (my_handler_for_ints != nullptr){
+                my_handler_for_ints(num);
+                }
+                (std::get<0>(otv)).push_back("int");
+                (std::get<1>(otv)).push_back(tek_token);
             }
             catch(...){
                 if (my_handler_for_strings != nullptr){my_handler_for_strings(tek_token.c_str());}
-                otv.push_back("too_big_int");
+                (std::get<0>(otv)).push_back("too_big_int");
+                (std::get<1>(otv)).push_back(tek_token);
             }
         }
         if (tek_token.length() > 0 && looks_like_number==0){
             if (my_handler_for_strings != nullptr){my_handler_for_strings(tek_token.c_str());}
-            otv.push_back("string");
+            (std::get<0>(otv)).push_back("string");
+            (std::get<1>(otv)).push_back(tek_token);
         }
         return otv;
     }

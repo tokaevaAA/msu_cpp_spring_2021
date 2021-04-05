@@ -18,7 +18,8 @@ private:
 public:
     Parser();
     ~Parser(){}
-    std::vector<std::string> parse(const std::string& text);
+    std::tuple<std::vector<std::string>,std::vector<std::string>>
+    parse(const std::string& text);
     void register_my_handler_for_begin_work(Handler_for_begin_work my_func);
     void register_my_handler_for_end_work(Handler_for_end_work my_func);
     void register_my_handler_for_ints(Handler_for_ints my_func);
