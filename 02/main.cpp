@@ -4,146 +4,302 @@
 #include "Parser.h"
 
 
-void my_func_for_begin(){
-  printf("Hello from my_register_for_begin_work\n");
 
-}
-
-void my_func_for_end(){
-  printf ("Hello from my_register_for_end_work\n");
-}
-
-void my_func_for_ints(uint64_t num){
-  printf("We have int: %llu\n", num);
-}
-
-void my_func_for_strings(const char *tek_word){
-    printf("We have string: %s\n", tek_word);
-}
 
 void Test1_EmptyString(){
     printf("Test1: empty string;\n");
-    std::tuple<std::vector<std::string>,std::vector<std::string>> otv;
+    
+    std::vector<uint64_t> vectInts;
+    std::vector<std::string> vectStrings;
+    
+    std::function<void(uint64_t)>
+    my_func_for_ints=[&vectInts](uint64_t num){
+        printf("We have int:%llu\n", num);
+        vectInts.push_back(num);
+    };
+
+    std::function<void(const char *)>
+    my_func_for_strings=[&vectStrings](const char *tek_word){
+        printf("We have string:%s\n", tek_word);
+        vectStrings.push_back(tek_word);
+    };
+
     Parser my_instance_of_parser;
-    otv=my_instance_of_parser.parse("");
-    assert((std::get<0>(otv)).size()==0);
+    my_instance_of_parser.register_my_handler_for_ints(my_func_for_ints);
+    my_instance_of_parser.register_my_handler_for_strings(my_func_for_strings);
+    my_instance_of_parser.parse("");
+    assert(vectInts.size()==0);
+    assert(vectStrings.size()==0);
+    printf("\n");
     
 }
 
 void Test2_TooBigInt(){
     printf("Test2: too big int;\n");
-    std::tuple<std::vector<std::string>,std::vector<std::string>> otv;
-    Parser my_instance_of_parser;
-    otv=my_instance_of_parser.parse("18446744073709551619");
-    assert((std::get<0>(otv)).size()==1);
-    assert((std::get<0>(otv))[0]=="too_big_int");
-    assert(strcmp( ((std::get<1>(otv))[0]).c_str(),"18446744073709551619")==0);
+    
+    std::vector<uint64_t> vectInts;
+    std::vector<std::string> vectStrings;
+    
+    std::function<void(uint64_t)>
+    my_func_for_ints=[&vectInts](uint64_t num){
+        printf("We have int:%llu\n", num);
+        vectInts.push_back(num);
+    };
 
+    std::function<void(const char *)>
+    my_func_for_strings=[&vectStrings](const char *tek_word){
+        printf("We have string:%s\n", tek_word);
+        vectStrings.push_back(tek_word);
+    };
+
+    Parser my_instance_of_parser;
+    my_instance_of_parser.register_my_handler_for_ints(my_func_for_ints);
+    my_instance_of_parser.register_my_handler_for_strings(my_func_for_strings);
+    
+    my_instance_of_parser.parse("18446744073709551615");
+    assert(vectInts.size()==1);
+    assert(vectStrings.size()==0);
+    assert(vectInts[0]==18446744073709551615uLL);
+    
+    vectInts.clear();
+    vectStrings.clear();
+    my_instance_of_parser.parse("18446744073709551616");
+    assert(vectInts.size()==0);
+    assert(vectStrings.size()==1);
+    assert(strcmp(vectStrings[0].c_str(),"18446744073709551616")==0);
+    printf("\n");
+    
 }
+
+
+
 
 void Test3_SeveralInts(){
     printf("Test3: several ints;\n");
-    std::tuple<std::vector<std::string>,std::vector<std::string>> otv;
-    Parser my_instance_of_parser;
-    otv=my_instance_of_parser.parse("18 446 744 ");
-    assert((std::get<0>(otv)).size()==3);
-    assert((std::get<0>(otv))[0]=="int");
-    assert((std::get<0>(otv))[1]=="int");
-    assert((std::get<0>(otv))[2]=="int");
-    assert(strcmp( ((std::get<1>(otv))[0]).c_str(),"18")==0);
-    assert(strcmp( ((std::get<1>(otv))[1]).c_str(),"446")==0);
-    assert(strcmp( ((std::get<1>(otv))[2]).c_str(),"744")==0);
+   
+    std::vector<uint64_t> vectInts;
+    std::vector<std::string> vectStrings;
+    
+    std::function<void(uint64_t)>
+    my_func_for_ints=[&vectInts](uint64_t num){
+        printf("We have int:%llu\n", num);
+        vectInts.push_back(num);
+    };
 
+    std::function<void(const char *)>
+    my_func_for_strings=[&vectStrings](const char *tek_word){
+        printf("We have string:%s\n", tek_word);
+        vectStrings.push_back(tek_word);
+    };
+    
+    Parser my_instance_of_parser;
+    my_instance_of_parser.register_my_handler_for_ints(my_func_for_ints);
+    my_instance_of_parser.register_my_handler_for_strings(my_func_for_strings);
+    my_instance_of_parser.parse("18 446 744 ");
+    
+    assert(vectInts.size()==3);
+    assert(vectInts[0]==18);
+    assert(vectInts[1]==446);
+    assert(vectInts[2]==744);
+    printf("\n");
 }
+
 
 void Test4_SpacesOnly(){
     printf("Test4: spaces only;\n");
-    std::tuple<std::vector<std::string>,std::vector<std::string>> otv;
+    
+    std::vector<uint64_t> vectInts;
+    std::vector<std::string> vectStrings;
+    
+    std::function<void(uint64_t)>
+    my_func_for_ints=[&vectInts](uint64_t num){
+        printf("We have int:%llu\n", num);
+        vectInts.push_back(num);
+    };
+
+    std::function<void(const char *)>
+    my_func_for_strings=[&vectStrings](const char *tek_word){
+        printf("We have string:%s\n", tek_word);
+        vectStrings.push_back(tek_word);
+    };
+    
     Parser my_instance_of_parser;
-    otv=my_instance_of_parser.parse("      ");
-    assert((std::get<0>(otv)).size()==0);
+    my_instance_of_parser.register_my_handler_for_ints(my_func_for_ints);
+    my_instance_of_parser.register_my_handler_for_strings(my_func_for_strings);
+    my_instance_of_parser.parse("      ");
+    assert(vectInts.size()==0);
+    assert(vectStrings.size()==0);
+    printf("\n");
+    
 }
 
 void Test5_1(){
     printf("Test5: 1;\n");
-    std::tuple<std::vector<std::string>,std::vector<std::string>> otv;
-    Parser my_instance_of_parser;
-    otv=my_instance_of_parser.parse("1");
-    assert((std::get<0>(otv)).size()==1);
-    assert((std::get<0>(otv))[0]=="int");
-    assert(strcmp( ((std::get<1>(otv))[0]).c_str(),"1")==0);
+    std::vector<uint64_t> vectInts;
+    std::vector<std::string> vectStrings;
+    
+    std::function<void(uint64_t)>
+    my_func_for_ints=[&vectInts](uint64_t num){
+        printf("We have int:%llu\n", num);
+        vectInts.push_back(num);
+    };
 
+    std::function<void(const char *)>
+    my_func_for_strings=[&vectStrings](const char *tek_word){
+        printf("We have string:%s\n", tek_word);
+        vectStrings.push_back(tek_word);
+    };
+    
+    Parser my_instance_of_parser;
+    my_instance_of_parser.register_my_handler_for_ints(my_func_for_ints);
+    my_instance_of_parser.register_my_handler_for_strings(my_func_for_strings);
+    
+    my_instance_of_parser.parse("1");
+    assert(vectInts.size()==1);
+    assert(vectStrings.size()==0);
+    assert(vectInts[0]==1);
+    printf("\n");
 }
 
 
 void Test6_a(){
     printf("Test6: a;\n");
-    std::tuple<std::vector<std::string>,std::vector<std::string>> otv;
-    Parser my_instance_of_parser;
-    otv=my_instance_of_parser.parse("a");
-    assert((std::get<0>(otv)).size()==1);
-    assert((std::get<0>(otv))[0]=="string");
-    assert(strcmp( ((std::get<1>(otv))[0]).c_str(),"a")==0);
+    
+    std::vector<uint64_t> vectInts;
+    std::vector<std::string> vectStrings;
+    
+    std::function<void(uint64_t)>
+    my_func_for_ints=[&vectInts](uint64_t num){
+        printf("We have int:%llu\n", num);
+        vectInts.push_back(num);
+    };
 
+    std::function<void(const char *)>
+    my_func_for_strings=[&vectStrings](const char *tek_word){
+        printf("We have string:%s\n", tek_word);
+        vectStrings.push_back(tek_word);
+    };
+    
+    Parser my_instance_of_parser;
+    my_instance_of_parser.register_my_handler_for_ints(my_func_for_ints);
+    my_instance_of_parser.register_my_handler_for_strings(my_func_for_strings);
+    
+    my_instance_of_parser.parse("a");
+    assert(vectInts.size()==0);
+    assert(vectStrings.size()==1);
+    assert(strcmp(vectStrings[0].c_str(),"a")==0);
+    printf("\n");
 }
+
+
 
 void Test7_AtEnds(){
     printf("Test7: atEnds;\n");
-    std::tuple<std::vector<std::string>,std::vector<std::string>> otv;
-    Parser my_instance_of_parser;
-    otv=my_instance_of_parser.parse("  a a12  123 12a  ");
-    assert((std::get<0>(otv)).size()==4);
-    assert((std::get<0>(otv))[0]=="string");
-    assert((std::get<0>(otv))[1]=="string");
-    assert((std::get<0>(otv))[2]=="int");
-    assert((std::get<0>(otv))[3]=="string");
-    assert(strcmp( ((std::get<1>(otv))[0]).c_str(),"a")==0);
-    assert(strcmp( ((std::get<1>(otv))[1]).c_str(),"a12")==0);
-    assert(strcmp( ((std::get<1>(otv))[2]).c_str(),"123")==0);
-    assert(strcmp( ((std::get<1>(otv))[3]).c_str(),"12a")==0);
+    
+    std::vector<uint64_t> vectInts;
+    std::vector<std::string> vectStrings;
+    
+    std::function<void(uint64_t)>
+    my_func_for_ints=[&vectInts](uint64_t num){
+        printf("We have int:%llu\n", num);
+        vectInts.push_back(num);
+    };
 
+    std::function<void(const char *)>
+    my_func_for_strings=[&vectStrings](const char *tek_word){
+        printf("We have string:%s\n", tek_word);
+        vectStrings.push_back(tek_word);
+    };
+    
+    
+    Parser my_instance_of_parser;
+    my_instance_of_parser.register_my_handler_for_ints(my_func_for_ints);
+    my_instance_of_parser.register_my_handler_for_strings(my_func_for_strings);
+    my_instance_of_parser.parse("  a a12  123 12a  ");
+    assert(vectInts.size()==1);
+    assert(vectStrings.size()==3);
+    assert(vectInts[0]==123);
+    assert(strcmp(vectStrings[0].c_str(),"a")==0);
+    assert(strcmp(vectStrings[1].c_str(),"a12")==0);
+    assert(strcmp(vectStrings[2].c_str(),"12a")==0);
+    printf("\n");
 }
 
-void Test8_EndWorkHandler(){
-    printf("Test8: we have handler for end work;\n");
-    std::tuple<std::vector<std::string>,std::vector<std::string>> otv;
-    Parser my_instance_of_parser;
-    my_instance_of_parser.register_my_handler_for_end_work(my_func_for_end);
-    otv=my_instance_of_parser.parse("abc 123 123a a123");
-    assert((std::get<0>(otv)).size()==4);
-    assert((std::get<0>(otv))[0]=="string");
-    assert((std::get<0>(otv))[1]=="int");
-    assert((std::get<0>(otv))[2]=="string");
-    assert((std::get<0>(otv))[3]=="string");
-    assert(strcmp( ((std::get<1>(otv))[0]).c_str(),"abc")==0);
-    assert(strcmp( ((std::get<1>(otv))[1]).c_str(),"123")==0);
-    assert(strcmp( ((std::get<1>(otv))[2]).c_str(),"123a")==0);
-    assert(strcmp( ((std::get<1>(otv))[3]).c_str(),"a123")==0);
 
+void Test8_StrangInt(){
+    printf("Test8: strangeInt;\n");
+
+    std::vector<uint64_t> vectInts;
+    std::vector<std::string> vectStrings;
+    
+    std::function<void(uint64_t)>
+    my_func_for_ints=[&vectInts](uint64_t num){
+        printf("We have int:%llu\n", num);
+        vectInts.push_back(num);
+    };
+
+    std::function<void(const char *)>
+    my_func_for_strings=[&vectStrings](const char *tek_word){
+        printf("We have string:%s\n", tek_word);
+        vectStrings.push_back(tek_word);
+    };
+    
+    Parser my_instance_of_parser;
+    my_instance_of_parser.register_my_handler_for_ints(my_func_for_ints);
+    my_instance_of_parser.register_my_handler_for_strings(my_func_for_strings);
+    my_instance_of_parser.parse("000123");
+    assert(vectInts.size()==1);
+    assert(vectStrings.size()==0);
+    assert(vectInts[0]==123);
+    printf("\n");
     
 }
 
+ 
 void Test9_AllHandlers(){
     printf("Test9: we have all handlers;\n");
-    std::tuple<std::vector<std::string>,std::vector<std::string>> otv;
+    
+    std::vector<uint64_t> vectInts;
+    std::vector<std::string> vectStrings;
+    
+    std::function<void(uint64_t)>
+    my_func_for_ints=[&vectInts](uint64_t num){
+        printf("We have int:%llu\n", num);
+        vectInts.push_back(num);
+    };
+
+    std::function<void(const char *)>
+    my_func_for_strings=[&vectStrings](const char *tek_word){
+        printf("We have string:%s\n", tek_word);
+        vectStrings.push_back(tek_word);
+    };
+    
+    std::function<void()>my_func_for_begin=[](){
+      printf("Hello from my_register_for_begin_work\n");
+
+    };
+
+    std::function<void()> my_func_for_end=[](){
+      printf ("Hello from my_register_for_end_work\n");
+    };
+
+    
+    
     Parser my_instance_of_parser;
     my_instance_of_parser.register_my_handler_for_begin_work(my_func_for_begin);
     my_instance_of_parser.register_my_handler_for_end_work(my_func_for_end);
     my_instance_of_parser.register_my_handler_for_ints(my_func_for_ints);
     my_instance_of_parser.register_my_handler_for_strings(my_func_for_strings);
-    otv=my_instance_of_parser.parse("abc 123 123a a123");
-    assert((std::get<0>(otv)).size()==4);
-    assert((std::get<0>(otv))[0]=="string");
-    assert((std::get<0>(otv))[1]=="int");
-    assert((std::get<0>(otv))[2]=="string");
-    assert((std::get<0>(otv))[3]=="string");
-    assert(strcmp( ((std::get<1>(otv))[0]).c_str(),"abc")==0);
-    assert(strcmp( ((std::get<1>(otv))[1]).c_str(),"123")==0);
-    assert(strcmp( ((std::get<1>(otv))[2]).c_str(),"123a")==0);
-    assert(strcmp( ((std::get<1>(otv))[3]).c_str(),"a123")==0);
-
+    my_instance_of_parser.parse("abc 123 ");
+    assert(vectInts.size()==1);
+    assert(vectStrings.size()==1);
+    assert(vectInts[0]==123);
+    assert(strcmp(vectStrings[0].c_str(),"abc")==0);
+    printf("\n");
+    
 }
 
+ 
 
 int main(void){
     printf("Hello!\n");
@@ -155,7 +311,7 @@ int main(void){
     Test5_1();
     Test6_a();
     Test7_AtEnds();
-    Test8_EndWorkHandler();
+    Test8_StrangInt();
     Test9_AllHandlers();
     
     

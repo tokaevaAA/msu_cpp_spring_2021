@@ -3,10 +3,11 @@
 #include <vector>
 
 
-using Handler_for_begin_work = void (*)(); //псевдонимы
-using Handler_for_end_work = void (*)();
-using Handler_for_ints = void (*)(uint64_t);
-using Handler_for_strings = void (*)(const char*);
+using Handler_for_begin_work = std::function<void()>; //псевдонимы
+using Handler_for_end_work = std::function<void()>;
+using Handler_for_ints = std::function<void(uint64_t)>;
+using Handler_for_strings = std::function<void(const char*)>;
+
 
 class Parser{
 private:
@@ -18,8 +19,7 @@ private:
 public:
     Parser();
     ~Parser(){}
-    std::tuple<std::vector<std::string>,std::vector<std::string>>
-    parse(const std::string& text);
+    void parse(const std::string& text);
     void register_my_handler_for_begin_work(Handler_for_begin_work my_func);
     void register_my_handler_for_end_work(Handler_for_end_work my_func);
     void register_my_handler_for_ints(Handler_for_ints my_func);
