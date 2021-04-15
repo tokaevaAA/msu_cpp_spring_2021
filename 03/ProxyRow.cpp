@@ -27,6 +27,7 @@ ProxyRow::ProxyRow(const ProxyRow& otherRow){
 }
         
 ProxyRow& ProxyRow::operator=(const ProxyRow& otherRow){
+    if (this==&otherRow){return *this;}
     if (row_data!=0){delete [] row_data;}
     row_size=otherRow.getSize();
     row_data=new int32_t[row_size];

@@ -30,6 +30,7 @@ Matrix::Matrix(const Matrix& otherMatrix): n_rows(otherMatrix.getNRows()), n_col
     
     
 Matrix& Matrix::operator=(const Matrix& otherMatrix){
+    if (this==&otherMatrix){return *this;}
     if (my_rows!=0){delete[] my_rows;}
     n_rows=otherMatrix.getNRows();
     n_cols=otherMatrix.getNCols();
