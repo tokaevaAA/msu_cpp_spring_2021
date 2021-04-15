@@ -55,7 +55,7 @@ Matrix operator+ (const Matrix& lhs, const Matrix& rhs){
 
     
 bool Matrix::operator == (const Matrix& other){
-    if (other.getNRows()!=n_rows || other.getNCols()!=n_cols){throw std::out_of_range("Out6");}
+    if (other.getNRows()!=n_rows || other.getNCols()!=n_cols){return false;}
     for (size_t i = 0; i < n_rows; i++){
         if (my_rows[i] != other[i]) {return false;}
     }
@@ -63,7 +63,7 @@ bool Matrix::operator == (const Matrix& other){
 }
     
 bool Matrix::operator != (const Matrix& other){
-    if (other.getNRows()!=n_rows || other.getNCols()!=n_cols){throw std::out_of_range("Out7");}
+    if (other.getNRows()!=n_rows || other.getNCols()!=n_cols){return true;}
     for (size_t i = 0; i < n_rows; i++){
         if (my_rows[i] != other[i]) {return true;}
     }
@@ -104,9 +104,10 @@ size_t Matrix::getNCols()const{
 }
     
 Matrix::~Matrix(){
-    //for (size_t i=0; i<n_rows; i=i+1){
+    //printf("destr Matrix\n");
+    for (size_t i=0; i<n_rows; i=i+1){
         //delete my_rows[i];
-    //}
+    }
     delete[] my_rows;
 }
     

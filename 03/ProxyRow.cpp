@@ -8,6 +8,7 @@ ProxyRow::ProxyRow():row_size(0),row_data(nullptr)
 {}
 
 ProxyRow::~ProxyRow(){
+    //printf("destr ProxyRow %p\n",this);
     delete[] row_data;
     
 }
