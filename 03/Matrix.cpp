@@ -54,7 +54,7 @@ Matrix operator+ (const Matrix& lhs, const Matrix& rhs){
 }
 
     
-bool Matrix::operator == (const Matrix& other){
+bool Matrix::operator == (const Matrix& other)const{
     if (other.getNRows()!=n_rows || other.getNCols()!=n_cols){return false;}
     for (size_t i = 0; i < n_rows; i++){
         if (my_rows[i] != other[i]) {return false;}
@@ -62,7 +62,7 @@ bool Matrix::operator == (const Matrix& other){
     return true;
 }
     
-bool Matrix::operator != (const Matrix& other){
+bool Matrix::operator != (const Matrix& other)const{
     if (other.getNRows()!=n_rows || other.getNCols()!=n_cols){return true;}
     for (size_t i = 0; i < n_rows; i++){
         if (my_rows[i] != other[i]) {return true;}

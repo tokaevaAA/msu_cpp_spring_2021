@@ -43,7 +43,7 @@ ProxyRow operator+ (const ProxyRow &lhs, const ProxyRow &rhs){
     return tmp;
 }
         
-bool ProxyRow::operator==(const ProxyRow& other){
+bool ProxyRow::operator==(const ProxyRow& other)const{
     if (row_size != other.getSize ()) {throw std::out_of_range ("Out3");}
     for (size_t i = 0; i < row_size; i++){
         if (row_data[i] != other[i]) {return false;}
@@ -51,7 +51,7 @@ bool ProxyRow::operator==(const ProxyRow& other){
     return true;
 }
         
-bool ProxyRow::operator !=(const ProxyRow& other){
+bool ProxyRow::operator !=(const ProxyRow& other)const{
     if (row_size != other.getSize ()) {throw std::out_of_range ("Out4");}
     for (size_t i = 0; i < row_size; i++){
         if (row_data[i] != other[i]) {return true;}
