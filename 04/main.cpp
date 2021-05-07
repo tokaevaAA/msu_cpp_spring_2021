@@ -156,6 +156,39 @@ void Test10_okoloBase(){
     printf("\n");
 }
 
+
+void Test11_more_multiplication(){
+    printf("Test11: more_multiplication;\n");
+    BigInt a;
+    
+    a=BigInt("1001")*BigInt("999");
+    a.pechat();
+    assert(a==BigInt(999999));
+    
+    a=BigInt("-1001")*BigInt("999");
+    a.pechat();
+    assert(a==BigInt(-999999));
+    
+    a=BigInt("1001")*BigInt("-999");
+    a.pechat();
+    assert(a==BigInt(-999999));
+    
+    a=BigInt("-1001")*BigInt("-999");
+    a.pechat();
+    assert(a==BigInt(999999));
+    
+    a=BigInt("-1001")*BigInt("0");
+    a.pechat();
+    printf("mysize=%d\n",a.my_dlina);
+    assert(a==BigInt(0));
+    
+    a=BigInt("-11896543")*BigInt("1155434");
+    a.pechat();
+    assert(a==BigInt("-13745670264662"));
+    
+    
+    printf("\n");
+}
 int main(){
     printf("Hello!\n");
     
@@ -169,6 +202,7 @@ int main(){
     Test8_move();
     Test9_okolo0();
     Test10_okoloBase();
+    Test11_more_multiplication();
     
     
     printf("Goodbye!\n");

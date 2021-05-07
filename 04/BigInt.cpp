@@ -8,7 +8,7 @@
 
 void BigInt::remove_zeros(){
     int cnt=0;
-    if ((*this).my_mas[(*this).my_dlina-cnt-1]==0){
+    while ((*this).my_mas[(*this).my_dlina-cnt-1]==0 && ((*this).my_dlina-cnt-1 >0)){
         cnt+=1;
     }
     if (cnt>0){
@@ -188,16 +188,21 @@ BigInt operator+(const BigInt& lhs, const BigInt& rhs){
         otv=add_absolute_values(lhs, rhs);
         otv.my_isNeg=lhs.my_isNeg;
         otv.remove_zeros();
+        if (otv.getInt()==0){otv.my_isNeg=false;}
         return otv;
     }
     else if (abs_of_left_is_greater(lhs, rhs)){
         otv=subtract_absolute_values(lhs, rhs);
         otv.my_isNeg=lhs.my_isNeg;
+        otv.remove_zeros();
+        if (otv.getInt()==0){otv.my_isNeg=false;}
         return otv;
     }
     else if (!abs_of_left_is_greater(lhs, rhs)){
         otv=subtract_absolute_values(rhs, lhs);
         otv.my_isNeg=rhs.my_isNeg;
+        otv.remove_zeros();
+        if (otv.getInt()==0){otv.my_isNeg=false;}
         return otv;
     }
     return otv;
@@ -254,6 +259,7 @@ BigInt operator*(const BigInt& lhs, const BigInt& rhs){
         else{perenos=0;}
     }
     otv.remove_zeros();
+    if (otv.getInt()==0){otv.my_isNeg=false;}
     return otv;
     }
     
@@ -266,6 +272,7 @@ BigInt operator*(const BigInt& lhs, int32_t a){
    
     
 bool BigInt::operator==(const BigInt& other)const{
+    if ((*this).getInt()==0 && other.getInt()==0){return true;}
     if ((*this).my_isNeg != other.my_isNeg || (*this).my_dlina != other.my_dlina) {return false;}
     else{
         for (int i = 0; i < (*this).my_dlina; i=i+1) {
