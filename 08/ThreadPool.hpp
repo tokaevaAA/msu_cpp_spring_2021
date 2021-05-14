@@ -13,7 +13,7 @@ class ThreadPool
 {
     std::vector<std::thread> vector_of_threads;
     std::queue<std::function <void()>> queue_of_tasks;
-    std::atomic<bool> pool_is_working;
+    std::atomic<bool> pool_is_working=true;
     std::condition_variable my_condvar;
     std::mutex my_mutex_for_queue;
 
@@ -28,7 +28,7 @@ public:
                 {
                     printf("In while true, queue-size=%lu\n",queue_of_tasks.size());
                     std::unique_lock<std::mutex> my_lock(my_mutex_for_queue); //mutex is locked
-                    while (pool_is_working && !queue_of_tasks.empty()){
+                    while (pool_is_working && queue_of_tasks.empty()){
                         printf("is sleeping\n");
                         my_condvar.wait(my_lock); //wait for signal from my-condvar and then grab mutex
                         printf("Got notify\n");
